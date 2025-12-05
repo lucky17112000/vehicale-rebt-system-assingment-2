@@ -46,4 +46,5 @@ const loginService = async (payload: Record<string, any>) => {
   console.log("Generated Token:", token);
   return { token, user };
 };
+
 export const authServices = { signUpService, loginService };
