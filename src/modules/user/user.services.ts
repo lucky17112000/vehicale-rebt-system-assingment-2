@@ -22,7 +22,10 @@ const updteUser = async (
       [name, email, phone, role, id]
     );
     return result;
-  } else if (loggedInUser.role === "customer" && String(loggedInUser.id) === String(id)) {
+  } else if (
+    loggedInUser.role === "customer" &&
+    String(loggedInUser.id) === String(id)
+  ) {
     const { name, email, phone } = payload;
     const result = await pool.query(
       `UPDATE Users SET name=$1 , email=$2 , phone=$3 WHERE id=$4 RETURNING *`,
@@ -34,4 +37,11 @@ const updteUser = async (
   return { rows: [] };
 };
 
-export const userServices = { getAllusers, updteUser };
+const deleteUser = async (id: string) => {
+  const result = await pool.query(`DELETE FROM Users WHERE id=$1 RETURNING *`, [
+    id,
+  ]);
+  return result;
+};
+
+export const userServices = { getAllusers, updteUser, deleteUser };
