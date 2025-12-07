@@ -20,11 +20,6 @@ const getAllUser = async (req: Request, res: Response) => {
 const updateUser = async (req: Request, res: Response) => {
   try {
     const loggedInUser = req.user;
-    // const loggedInuserId = loggedInUser?.id;
-    // console.log("Request body:", req.body);
-    // console.log("Logged in user:", loggedInUser);
-    // console.log("Params ID:", req.params.id);
-
     const result = await userServices.updteUser(
       req.body as Record<string, any>,
       loggedInUser as Record<string, any>,

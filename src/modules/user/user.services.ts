@@ -18,9 +18,20 @@ const updteUser = async (
   if (loggedInUser.role === "admin") {
     const { name, email, phone, role } = payload;
     const result = await pool.query(
-      `UPDATE Users SET name=$1 , email=$2 , phone=$3 , role=$4 WHERE id=$5 RETURNING *`,
+      `UPDATE Users SET 
+        name = COALESCE($1, name),
+        email = COALESCE($2, email),
+        phone = COALESCE($3, phone),
+        role = COALESCE($4, role)
+      WHERE id=$5 RETURNING *`,
       [name, email, phone, role, id]
     );
+
+    if (result.rows.length > 0) {
+      delete result.rows[0].password;
+      delete result.rows[0].created_at;
+      delete result.rows[0].updated_at;
+    }
     return result;
   } else if (
     loggedInUser.role === "customer" &&
@@ -28,9 +39,18 @@ const updteUser = async (
   ) {
     const { name, email, phone } = payload;
     const result = await pool.query(
-      `UPDATE Users SET name=$1 , email=$2 , phone=$3 WHERE id=$4 RETURNING *`,
+      `UPDATE Users SET 
+        name = COALESCE($1, name),
+        email = COALESCE($2, email),
+        phone = COALESCE($3, phone)
+      WHERE id=$4 RETURNING *`,
       [name, email, phone, id]
     );
+    if (result.rows.length > 0) {
+      delete result.rows[0].password;
+      delete result.rows[0].created_at;
+      delete result.rows[0].updated_at;
+    }
     return result;
   }
 
