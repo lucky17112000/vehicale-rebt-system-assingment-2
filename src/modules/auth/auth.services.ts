@@ -15,6 +15,8 @@ const signUpService = async (payload: Record<string, any>) => {
   );
 
   delete result.rows[0].password;
+  delete result.rows[0].created_at;
+  delete result.rows[0].updated_at;
   return result;
 };
 
@@ -40,9 +42,12 @@ const loginService = async (payload: Record<string, any>) => {
       role: user.role,
     },
     config.jwtSecret as string,
-    { expiresIn: "7d" }
+    { expiresIn: "1d" }
   );
 
+  delete user.password;
+  delete user.created_at;
+  delete user.updated_at;
   console.log("Generated Token:", token);
   return { token, user };
 };

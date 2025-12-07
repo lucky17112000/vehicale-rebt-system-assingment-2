@@ -20,11 +20,11 @@ app.use("/api/v1/vehicles", vehiclesRoutes);
 app.use("/api/v1/bookings", bookingRoutes);
 
 //AT LAST WE HAVE TO HANDLE IT
-app.use((req: Request, res: Response) => {
-  res.status(400).json({
-    success: false,
-    message: "Route Not Found",
-  });
-});
+// app.use((req: Request, res: Response) => {
+//   res.status(400).json({
+//     success: false,
+//     message: "Route Not Found",
+//   });
+// });
 
 export default app;
