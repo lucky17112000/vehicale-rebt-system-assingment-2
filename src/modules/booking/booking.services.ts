@@ -1,5 +1,28 @@
 import { pool } from "../../config/db";
 
+const checkAndUpdateExpiredBookings = async () => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const expiredBookings = await pool.query(
+    `SELECT * FROM Bookings WHERE status = 'active' AND rent_end_date < $1`,
+    [today]
+  );
+
+  for (const booking of expiredBookings.rows) {
+    await pool.query(
+      `UPDATE Bookings SET status = 'returned', updated_at = NOW() WHERE id = $1`,
+      [booking.id]
+    );
+    await pool.query(
+      `UPDATE Vehicles SET availability_status = 'available' WHERE id = $1`,
+      [booking.vehicle_id]
+    );
+  }
+
+  return expiredBookings.rows.length;
+};
+
 const createBooking = async (payload: Record<string, any>) => {
   const { customer_id, vehicle_id, rent_start_date, rent_end_date } = payload;
   const result = await pool.query(`SELECT * FROM Vehicles WHERE id = $1`, [
@@ -59,6 +82,9 @@ const createBooking = async (payload: Record<string, any>) => {
 };
 
 const getAllBookings = async (id: string, role: string) => {
+  //
+  await checkAndUpdateExpiredBookings();
+
   if (role === "admin") {
     const result = await pool.query(`SELECT * FROM Bookings`);
     //cutomer id guloalda korci query chalate hobe karon user er email and name lagbe
@@ -331,24 +357,6 @@ const bookingUpdate = async (
       status: booking.status,
     };
   }
-  //ekhane else na korle maybe besi valo hoto so debuging er somoy etao chk korte hobe
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const expiredBookings = await pool.query(
-    `SELECT * FROM Bookings WHERE status = 'active' AND rent_end_date < $1`,
-    [today]
-  );
-  if (expiredBookings.rows.length === 0) {
-    return { rows: [] };
-  }
-
-  await pool.query(
-    `UPDATE Bookings SET status = 'returned', updated_at = NOW() WHERE id = $1`,
-    [expiredBookings.rows[0].id]
-  );
-  await pool.query(
-    `UPDATE Vehicles SET availability_status = 'available' WHERE id = $1`,
-    [expiredBookings.rows[0].vehicle_id]
-  );
 };
+
 export const bookingServices = { createBooking, getAllBookings, bookingUpdate };

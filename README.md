@@ -215,6 +215,8 @@ Content-Type: application/json
 }
 ```
 
+### when user want to cheak all booking list then system will cheak automaticlly expired booking available or not if any expirde booking vaialable in databse, the system will uodate it .... and alternativly we can use corn job for this task...but for this assingment i have handled it justusing a function call..
+
 #### User Management Endpoints
 
 **11. Get All Users (Admin only)**
