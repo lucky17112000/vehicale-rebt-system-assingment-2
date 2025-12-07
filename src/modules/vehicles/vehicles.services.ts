@@ -20,12 +20,16 @@ const createVehicles = async (payload: Record<string, any>) => {
       availability_status,
     ]
   );
+  if (result.rows.length > 0) {
+    delete result.rows[0].created_at;
+    delete result.rows[0].updated_at;
+  }
   return result;
 };
 const getAllVehicles = async () => {
   const result = await pool.query(`SELECT * FROM Vehicles`);
   if (result.rows.length > 0) {
-    result.rows.forEach(row => {
+    result.rows.forEach((row) => {
       delete row.created_at;
       delete row.updated_at;
     });
@@ -57,6 +61,10 @@ const updateVehicles = async (id: string, payload: Record<string, any>) => {
       id,
     ]
   );
+  if (result.rows.length > 0) {
+    delete result.rows[0].created_at;
+    delete result.rows[0].updated_at;
+  }
   return result;
 };
 
