@@ -1,5 +1,9 @@
 # Vehicle Rental System
 
+### live server link here:
+
+: https://vehical-rentl-system-assingment-2-9q893lehu.vercel.app
+
 ## Project Overview
 
 This is a comprehensive Vehicle Rental System built with **TypeScript**, **Express.js**, and **PostgreSQL**. The system provides a complete RESTful API for managing vehicle rentals, allowing users to browse available vehicles, make bookings, and manage their reservations. Administrators can manage the vehicle inventory, oversee all bookings, and handle returns.
@@ -26,22 +30,18 @@ The database schema consists of three main tables:
 - **Backend**: Node.js, Express.js, TypeScript
 - **Database**: PostgreSQL with pg driver
 - **Authentication**: JWT (JSON Web Tokens)
-- **Password Security and authentication**: bcryptjs for password hashing and verification and jsonwebtoken for token bgeneration and validation
+- **Password Security and authentication**: bcryptjs for password hashing for verification and jsonwebtoken for token generation and validation
 - **Environment Management**: dotenv for managing environment variables
 - **Validation**: Custom middleware and input validation
 - **Deployment**: Vercel-ready configuration
 
 ### Architecture
 
-- trying RESTful API design
-- Modular pattern with separate routes, controllers, and services
+- tried RESTful API design
+- Modular pattern with separate-> routes, controllers, and services
 - Role-based middleware for authorization by admin and cutomer roles
 - Database connection pooling it because optimal performance integratin with PostgreSQL
 - Error handling and validation try to add multiple level
-
-### Deployment Information
-
-- api endpoint base url: https://vehical-rentl-system-assingment-2-9q893lehu.vercel.app
 
 ## Setup Instructions
 
