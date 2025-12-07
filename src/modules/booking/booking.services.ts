@@ -73,9 +73,19 @@ const createBooking = async (payload: Record<string, any>) => {
     `UPDATE Vehicles SET availability_status = 'booked' WHERE id = $1`,
     [vehicle_id]
   );
+
   if (bookingWorkflow.rows.length > 0) {
-    delete bookingWorkflow.rows[0].created_at;
-    delete bookingWorkflow.rows[0].updated_at;
+    const booking = bookingWorkflow.rows[0];
+
+    booking.rent_start_date = booking.rent_start_date
+      ? new Date(booking.rent_start_date).toISOString().split("T")[0]
+      : booking.rent_start_date;
+    booking.rent_end_date = booking.rent_end_date
+      ? new Date(booking.rent_end_date).toISOString().split("T")[0]
+      : booking.rent_end_date;
+
+    delete booking.created_at;
+    delete booking.updated_at;
   }
 
   return bookingWorkflow;
@@ -274,14 +284,21 @@ const bookingUpdate = async (
       throw new Error("Booking not found");
     }
 
-    if (checkBooking.rows[0].status === "returned") {
-      throw new Error("Booking is already returned");
+    if (
+      checkBooking.rows[0].status === "returned" ||
+      checkBooking.rows[0].status === "cancelled"
+    ) {
+      throw new Error(`Booking is already ${checkBooking.rows[0].status}`);
     }
 
-    // Update booking status after returnedomng
+    let finalStatus = "returned";
+    if (role === "admin" && checkBooking.rows[0].customer_id === parseInt(id)) {
+      finalStatus = "cancelled";
+    }
+
     const result = await pool.query(
-      `UPDATE Bookings SET status='returned' WHERE id=$1 RETURNING *`,
-      [bookingId]
+      `UPDATE Bookings SET status=$1 WHERE id=$2 RETURNING *`,
+      [finalStatus, bookingId]
     );
 
     if (result.rows.length > 0) {
