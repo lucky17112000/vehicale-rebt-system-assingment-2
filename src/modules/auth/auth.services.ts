@@ -48,7 +48,7 @@ const loginService = async (payload: Record<string, any>) => {
   delete user.password;
   delete user.created_at;
   delete user.updated_at;
-  console.log("Generated Token:", token);
+  // console.log("Generated Token:", token);
   return { token, user };
 };
 

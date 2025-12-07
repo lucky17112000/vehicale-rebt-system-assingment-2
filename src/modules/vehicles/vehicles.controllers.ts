@@ -38,11 +38,10 @@ const getAllvehicles = async (req: Request, res: Response) => {
 
 const getSingleVehicles = async (req: Request, res: Response) => {
   try {
-    // console.log("Requestedvehicle ID:", req.params.vehicleId);
     const result = await vehiclesServices.singleVehicles(
       req.params.vehicleId as string
     );
-    // console.log("query result:", result.rows);
+
     if (result.rows.length === 0) {
       return res.status(404).json({
         success: false,

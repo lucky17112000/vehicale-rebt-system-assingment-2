@@ -2,7 +2,13 @@ import { pool } from "../../config/db";
 
 const getAllusers = async () => {
   const result = await pool.query(`SELECT * FROM Users`);
-  delete result.rows[0].password;
+  if (result.rows.length > 0) {
+    result.rows.forEach((row) => {
+      delete row.password;
+      delete row.created_at;
+      delete row.updated_at;
+    });
+  }
   return result;
 };
 

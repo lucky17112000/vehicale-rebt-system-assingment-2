@@ -39,6 +39,10 @@ const getAllVehicles = async () => {
 
 const singleVehicles = async (id: string) => {
   const result = await pool.query(`SELECT * FROM Vehicles WHERE id=$1`, [id]);
+  if (result.rows.length > 0) {
+    delete result.rows[0].created_at;
+    delete result.rows[0].updated_at;
+  }
   return result;
 };
 

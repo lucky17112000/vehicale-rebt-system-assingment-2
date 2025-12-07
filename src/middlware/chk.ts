@@ -21,6 +21,12 @@ const chk = (...roles: ("admin" | "customer")[]) => {
         token = authHeader.substring(7);
       }
 
+      // let token = "";
+      // for (let i = splited.length - 1; splited[i] === " "; --i) {
+      //   splited += token[i];
+      // }
+      // token.reverse();
+
       const decodedToken = jwt.verify(token, config.jwtSecret as string);
       //   console.log(decodedToken);
       req.user = decodedToken as JwtPayload;

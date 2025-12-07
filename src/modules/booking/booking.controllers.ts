@@ -43,25 +43,23 @@ const bookingUpdate = async (req: Request, res: Response) => {
   try {
     const { id, role } = req.user as Record<string, any>;
     const bookingId = req.params.bookingId as string;
-    const result = (await bookingServices.bookingUpdate(
+    const result = await bookingServices.bookingUpdate(
       bookingId,
       role,
       id,
       req.body.status
-    )) as Record<string, any>;
+    );
 
-    const take = req.body.status;
-    if (result.length === 0) {
-      res.status(400).json({
-        success: false,
-        message: "No bookings found to update",
-      });
-    }
+    const statusType = req.body.status;
+    const message =
+      statusType === "returned"
+        ? "Booking returned successfully"
+        : "Booking cancelled successfully";
 
     res.status(200).json({
       success: true,
-      message: "Booking cancelled successfully",
-      data: { booking: result.booking, vehicle: result.vehicle },
+      message: message,
+      data: result,
     });
   } catch (error: any) {
     res.status(500).json({

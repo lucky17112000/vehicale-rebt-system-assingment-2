@@ -43,8 +43,8 @@ const initDb = async () => {
     rent_end_date DATE NOT NULL,
     CHECK (rent_end_date > rent_start_date),
     total_price NUMERIC NOT NULL CHECK (total_price > 0),
-    vehicle JSONB,
     status VARCHAR(20) NOT NULL CHECK (status IN ('active', 'cancelled', 'returned')),
+    vehicle JSONB,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
   );
